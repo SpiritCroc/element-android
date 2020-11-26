@@ -33,6 +33,7 @@ import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.room.model.RoomAvatarContent
+import org.matrix.android.sdk.api.session.room.model.RoomHistoryVisibilityContent
 import org.matrix.android.sdk.api.session.room.powerlevels.PowerLevelsHelper
 import org.matrix.android.sdk.rx.mapOptional
 import org.matrix.android.sdk.rx.rx
@@ -60,6 +61,7 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
 
     init {
         observeRoomSummary()
+        observeRoomHistoryVisibility()
         observeRoomAvatar()
         observeState()
     }
@@ -84,7 +86,7 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
                                 || summary?.name != newName
                                 || summary?.topic != newTopic
                                 || summary?.canonicalAlias != newCanonicalAlias?.takeIf { it.isNotEmpty() }
-                                || newHistoryVisibility != null
+                                || (newHistoryVisibility != null && newHistoryVisibility != currentHistoryVisibility)
                 )
             }
         }
@@ -96,7 +98,6 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
                 .execute { async ->
                     val roomSummary = async.invoke()
                     copy(
-                            historyVisibilityEvent = room.getStateEvent(EventType.STATE_ROOM_HISTORY_VISIBILITY),
                             roomSummary = async,
                             newName = roomSummary?.name,
                             newTopic = roomSummary?.topic,
@@ -119,6 +120,19 @@ class RoomSettingsViewModel @AssistedInject constructor(@Assisted initialState: 
                                     EventType.STATE_ROOM_HISTORY_VISIBILITY)
                     )
                     setState { copy(actionPermissions = permissions) }
+                }
+                .disposeOnClear()
+    }
+
+    private fun observeRoomHistoryVisibility() {
+        room.rx()
+                .liveStateEvent(EventType.STATE_ROOM_HISTORY_VISIBILITY, QueryStringValue.NoCondition)
+                .mapOptional { it.content.toModel<RoomHistoryVisibilityContent>() }
+                .unwrap()
+                .subscribe {
+                    it.historyVisibility?.let {
+                        setState { copy(currentHistoryVisibility = it) }
+                    }
                 }
                 .disposeOnClear()
     }
