@@ -38,7 +38,7 @@ import im.vector.app.core.resources.ColorProvider
 import im.vector.app.core.utils.toast
 import im.vector.app.features.home.AvatarRenderer
 import im.vector.app.features.roomprofile.RoomProfileArgs
-import im.vector.app.features.roomprofile.settings.historyvisibility.SetRoomHistoryVisibilitySharedActionViewModel
+import im.vector.app.features.roomprofile.settings.historyvisibility.RoomHistoryVisibilitySharedActionViewModel
 import im.vector.app.features.roomprofile.settings.historyvisibility.RoomHistoryVisibilityBottomSheet
 import kotlinx.android.synthetic.main.fragment_room_setting_generic.*
 import kotlinx.android.synthetic.main.merge_overlay_waiting_view.*
@@ -58,7 +58,7 @@ class RoomSettingsFragment @Inject constructor(
         GalleryOrCameraDialogHelper.Listener {
 
     private val viewModel: RoomSettingsViewModel by fragmentViewModel()
-    private lateinit var sharedActionViewModel: SetRoomHistoryVisibilitySharedActionViewModel
+    private lateinit var roomHistoryVisibilitySharedActionViewModel: RoomHistoryVisibilitySharedActionViewModel
     private val roomProfileArgs: RoomProfileArgs by args()
     private val galleryOrCameraDialogHelper = GalleryOrCameraDialogHelper(this, colorProvider)
 
@@ -68,7 +68,7 @@ class RoomSettingsFragment @Inject constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRoomHistoryVisibilitySharedViewModel()
+        setupRoomHistoryVisibilitySharedActionViewModel()
         controller.callback = this
         setupToolbar(roomSettingsToolbar)
         roomSettingsRecyclerView.configureWith(controller, hasFixedSize = true)
@@ -87,9 +87,9 @@ class RoomSettingsFragment @Inject constructor(
         }
     }
 
-    private fun setupRoomHistoryVisibilitySharedViewModel() {
-        sharedActionViewModel = activityViewModelProvider.get(SetRoomHistoryVisibilitySharedActionViewModel::class.java)
-        sharedActionViewModel
+    private fun setupRoomHistoryVisibilitySharedActionViewModel() {
+        roomHistoryVisibilitySharedActionViewModel = activityViewModelProvider.get(RoomHistoryVisibilitySharedActionViewModel::class.java)
+        roomHistoryVisibilitySharedActionViewModel
                 .observe()
                 .subscribe { action ->
                     viewModel.handle(RoomSettingsAction.SetRoomHistoryVisibility(action.roomHistoryVisibility))

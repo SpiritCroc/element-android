@@ -35,7 +35,7 @@ import im.vector.app.features.home.room.list.actions.RoomListQuickActionsSharedA
 import im.vector.app.features.reactions.EmojiChooserViewModel
 import im.vector.app.features.roomdirectory.RoomDirectorySharedActionViewModel
 import im.vector.app.features.roomprofile.RoomProfileSharedActionViewModel
-import im.vector.app.features.roomprofile.settings.historyvisibility.SetRoomHistoryVisibilitySharedActionViewModel
+import im.vector.app.features.roomprofile.settings.historyvisibility.RoomHistoryVisibilitySharedActionViewModel
 import im.vector.app.features.userdirectory.UserListSharedActionViewModel
 
 @Module
@@ -108,8 +108,8 @@ interface ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SetRoomHistoryVisibilitySharedActionViewModel::class)
-    fun bindSetRoomHistoryVisibilitySharedActionViewModel(viewModel: SetRoomHistoryVisibilitySharedActionViewModel): ViewModel
+    @ViewModelKey(RoomHistoryVisibilitySharedActionViewModel::class)
+    fun bindRoomHistoryVisibilitySharedActionViewModel(viewModel: RoomHistoryVisibilitySharedActionViewModel): ViewModel
 
     @Binds
     @IntoMap
