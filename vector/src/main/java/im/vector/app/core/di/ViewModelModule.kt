@@ -36,6 +36,7 @@ import im.vector.app.features.reactions.EmojiChooserViewModel
 import im.vector.app.features.roomdirectory.RoomDirectorySharedActionViewModel
 import im.vector.app.features.roomprofile.RoomProfileSharedActionViewModel
 import im.vector.app.features.roomprofile.settings.historyvisibility.RoomHistoryVisibilitySharedActionViewModel
+import im.vector.app.features.roomprofile.settings.joinrule.RoomJoinRuleSharedActionViewModel
 import im.vector.app.features.userdirectory.UserListSharedActionViewModel
 
 @Module
@@ -110,6 +111,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(RoomHistoryVisibilitySharedActionViewModel::class)
     fun bindRoomHistoryVisibilitySharedActionViewModel(viewModel: RoomHistoryVisibilitySharedActionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RoomJoinRuleSharedActionViewModel::class)
+    fun bindRoomJoinRuleSharedActionViewModel(viewModel: RoomJoinRuleSharedActionViewModel): ViewModel
 
     @Binds
     @IntoMap
