@@ -61,13 +61,13 @@ class RoomSettingsController @Inject constructor(
             id("avatar")
             enabled(data.actionPermissions.canChangeAvatar)
             when (val avatarAction = data.avatarAction) {
-                RoomSettingsViewState.AvatarAction.None -> {
+                RoomSettingsViewState.AvatarAction.None            -> {
                     // Use the current value
                     avatarRenderer(avatarRenderer)
                     // We do not want to use the fallback avatar url, which can be the other user avatar, or the current user avatar.
                     matrixItem(roomSummary.toMatrixItem().copy(avatarUrl = data.currentRoomAvatarUrl))
                 }
-                RoomSettingsViewState.AvatarAction.DeleteAvatar ->
+                RoomSettingsViewState.AvatarAction.DeleteAvatar    ->
                     imageUri(null)
                 is RoomSettingsViewState.AvatarAction.UpdateAvatar ->
                     imageUri(avatarAction.newAvatarUri)
@@ -113,13 +113,10 @@ class RoomSettingsController @Inject constructor(
             }
         }
 
-        val historyVisibility = roomHistoryVisibilityFormatter.format(data.currentHistoryVisibility)
-        val newHistoryVisibility = data.newHistoryVisibility?.let { roomHistoryVisibilityFormatter.format(it) }
-
         buildProfileAction(
                 id = "historyReadability",
                 title = stringProvider.getString(R.string.room_settings_room_read_history_rules_pref_title),
-                subtitle = newHistoryVisibility ?: historyVisibility,
+                subtitle = roomHistoryVisibilityFormatter.getSetting(data.newHistoryVisibility ?: data.currentHistoryVisibility),
                 dividerColor = dividerColor,
                 divider = false,
                 editable = data.actionPermissions.canChangeHistoryVisibility,
